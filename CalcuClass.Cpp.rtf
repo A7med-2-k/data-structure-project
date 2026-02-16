@@ -1,0 +1,171 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 #include <iostream>\
+#include <vector>\
+#include <string>\
+#include <sstream>\
+#include <limits>\
+using namespace std;\
+\
+class CalcuClass \{\
+public:\
+    double Summation(const vector<double>& arr) \{\
+        double sum = 0;\
+        for (double num : arr) sum += num;\
+        return sum;\
+    \}\
+\
+    double Multiply(const vector<double>& arr) \{\
+        if (arr.empty()) return 0;\
+        double product = 1;\
+        for (double num : arr) product *= num;\
+        return product;\
+    \}\
+\
+    // Performs arr[0] / arr[1] / arr[2] / ...\
+    double Division(const vector<double>& arr, bool &ok) \{\
+        ok = true;\
+        if (arr.empty()) \{ ok = false; return 0; \}\
+        double result = arr[0];\
+        for (size_t i = 1; i < arr.size(); ++i) \{\
+            if (arr[i] == 0.0) \{ ok = false; return 0; \}\
+            result /= arr[i];\
+        \}\
+        return result;\
+    \}\
+\
+    double Subtract(const vector<double>& arr) \{\
+        if (arr.empty()) return 0;\
+        double result = arr[0];\
+        for (size_t i = 1; i < arr.size(); ++i) result -= arr[i];\
+        return result;\
+    \}\
+\};\
+\
+// Helper: read an integer with prompt (uses getline & parsing)\
+int readInt(const string &prompt) \{\
+    string line;\
+    int value;\
+    while (true) \{\
+        cout << prompt;\
+        if (!std::getline(cin, line)) \{\
+            // EOF or error\
+            exit(0);\
+        \}\
+        stringstream ss(line);\
+        if (ss >> value) return value;\
+        cout << "Invalid integer \'97 please try again.\\n";\
+    \}\
+\}\
+\
+// Helper: read N doubles; accepts them all on one line or across lines\
+vector<double> readNDoubles(int n) \{\
+    vector<double> result;\
+    string line;\
+    cout << "Enter " << n << " elements (you may type them separated by spaces or newline):\\n";\
+    while ((int)result.size() < n) \{\
+        if (!std::getline(cin, line)) exit(0); // handle EOF gracefully\
+        if (line.empty()) continue;\
+        stringstream ss(line);\
+        double x;\
+        while (ss >> x) \{\
+            result.push_back(x);\
+            if ((int)result.size() == n) break;\
+        \}\
+        if ((int)result.size() < n) \{\
+            cout << "Still need " << (n - (int)result.size()) << " more element(s).\\n";\
+        \}\
+    \}\
+    return result;\
+\}\
+\
+int main() \{\
+    CalcuClass calculator;\
+\
+    // Read size\
+    int size = 0;\
+    while (size <= 0) \{\
+        size = readInt("Enter the number of elements: ");\
+        if (size <= 0) cout << "Please enter a positive number.\\n";\
+    \}\
+\
+    // Read array elements robustly\
+    vector<double> arr = readNDoubles(size);\
+\
+    // Menu loop: read choices with getline to avoid buffering issues\
+    while (true) \{\
+        cout << "\\n===========================================\\n";\
+        cout << "===============By (Your Name)===============\\n";\
+        cout << "Advisor: Dr. Mohammed Al-hubaishi\\n";\
+        cout << "  ~~ WELCOME to Data Structure Algorithms program ~~\\n\\n";\
+        cout << "Select or Enter Your Choice from the Menu:\\n";\
+        cout << "  1. + Summation and print the results\\n";\
+        cout << "  2. * Multiply and print the results\\n";\
+        cout << "  3. / Division and print the results\\n";\
+        cout << "  4. - Subtract and print the results\\n";\
+        cout << "  5. Exit\\n";\
+        cout << "=======================================================\\n";\
+\
+        string choiceLine;\
+        cout << "Enter your choice: " << flush;\
+        if (!getline(cin, choiceLine)) break; // EOF\
+        if (choiceLine.empty()) \{ cout << "No input detected. Please enter 1-5.\\n"; continue; \}\
+\
+        stringstream cs(choiceLine);\
+        int choice;\
+        if (!(cs >> choice)) \{\
+            cout << "Invalid choice. Please enter a number between 1 and 5.\\n";\
+            continue;\
+        \}\
+\
+        switch (choice) \{\
+            case 1:\
+                cout << "Result of Summation = " << calculator.Summation(arr) << "\\n";\
+                break;\
+            case 2:\
+                cout << "Result of Multiplication = " << calculator.Multiply(arr) << "\\n";\
+                break;\
+            case 3: \{\
+                bool ok;\
+                double res = calculator.Division(arr, ok);\
+                if (!ok) cout << "Error: Division failed (maybe division by zero or empty array).\\n";\
+                else cout << "Result of Division = " << res << "\\n";\
+                break;\
+            \}\
+            case 4:\
+                cout << "Result of Subtraction = " << calculator.Subtract(arr) << "\\n";\
+                break;\
+            case 5:\
+                cout << "Exiting program... Goodbye!\\n";\
+                return 0;\
+            default:\
+                cout << "Invalid choice! Please try again.\\n";\
+        \}\
+\
+        // After operation, allow user to re-run with same array or change array\
+        cout << "\\nWould you like to (1) use the same numbers, (2) enter new numbers, or (3) exit? Enter 1/2/3: ";\
+        string follow;\
+        if (!getline(cin, follow)) break;\
+        if (follow == "2") \{\
+            // read new size? keep same size for simplicity, or ask new size\
+            int newSize = 0;\
+            while (newSize <= 0) \{\
+                newSize = readInt("Enter the number of elements (positive integer): ");\
+                if (newSize <= 0) cout << "Please enter a positive number.\\n";\
+            \}\
+            arr = readNDoubles(newSize);\
+        \} else if (follow == "3") \{\
+            cout << "Exiting program... Goodbye!\\n";\
+            return 0;\
+        \}\
+        // if follow == "1" or anything else, continue with same arr\
+    \}\
+\
+    return 0;\
+\}\
+}
