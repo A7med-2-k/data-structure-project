@@ -1,0 +1,167 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2639
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 #include <iostream>\
+using namespace std;\
+\
+// Template class (replace YourName with your actual name)\
+template <class AhmedDaoudi>\
+class LinkedList \{\
+private:\
+    // Node structure\
+    struct Node \{\
+        AhmedDaoudi data;\
+        Node* next;\
+    \};\
+    Node* head;\
+\
+public:\
+    // Constructor\
+    LinkedList() \{\
+        head = nullptr;\
+    \}\
+\
+    // Add a new node\
+    void Add(AhmedDaoudi value) \{\
+        Node* newNode = new Node;\
+        newNode->data = value;\
+        newNode->next = nullptr;\
+\
+        if (head == nullptr) \{\
+            head = newNode;\
+        \} else \{\
+            Node* temp = head;\
+            while (temp->next != nullptr) \{\
+                temp = temp->next;\
+            \}\
+            temp->next = newNode;\
+        \}\
+        cout << "Node with value " << value << " added successfully.\\n";\
+    \}\
+\
+    // Delete a node\
+    void Delete(AhmedDaoudi value) \{\
+        if (head == nullptr) \{\
+            cout << "List is empty!\\n";\
+            return;\
+        \}\
+\
+        Node* temp = head;\
+        Node* prev = nullptr;\
+\
+        // If head node itself holds the key\
+        if (temp != nullptr && temp->data == value) \{\
+            head = temp->next;\
+            delete temp;\
+            cout << "Node with value " << value << " deleted.\\n";\
+            return;\
+        \}\
+\
+        // Search for the node to be deleted\
+        while (temp != nullptr && temp->data != value) \{\
+            prev = temp;\
+            temp = temp->next;\
+        \}\
+\
+        // If value not found\
+        if (temp == nullptr) \{\
+            cout << "Value not found!\\n";\
+            return;\
+        \}\
+\
+        // Unlink the node\
+        prev->next = temp->next;\
+        delete temp;\
+        cout << "Node with value " << value << " deleted.\\n";\
+    \}\
+\
+    // Search for a node\
+    void Search(AhmedDaoudi value) \{\
+        Node* temp = head;\
+        int pos = 1;\
+        while (temp != nullptr) \{\
+            if (temp->data == value) \{\
+                cout << "Value " << value << " found at position " << pos << ".\\n";\
+                return;\
+            \}\
+            temp = temp->next;\
+            pos++;\
+        \}\
+        cout << "Value " << value << " not found in the list.\\n";\
+    \}\
+\
+    // Print all nodes\
+    void Print() \{\
+        if (head == nullptr) \{\
+            cout << "List is empty!\\n";\
+            return;\
+        \}\
+        Node* temp = head;\
+        cout << "List elements: ";\
+        while (temp != nullptr) \{\
+            cout << temp->data << " -> ";\
+            temp = temp->next;\
+        \}\
+        cout << "NULL\\n";\
+    \}\
+\
+    // Exit (just a message)\
+    void ExitProgram() \{\
+        cout << "Exiting program... Goodbye!\\n";\
+    \}\
+\};\
+\
+// ===============================\
+// Main Function with Menu\
+// ===============================\
+int main() \{\
+    LinkedList<int> list; // You can change <int> to <float> or <string> if you like\
+    int choice;\
+    int value;\
+\
+    cout << "============== By Ahmed Daoudi ==============\\n";\
+    cout << "~~ WELCOME to Linked List Program ~~\\n";\
+\
+    do \{\
+        cout << "\\n=============================================\\n";\
+        cout << " Select and Enter Your Choice from the Menu:\\n";\
+        cout << "=============================================\\n";\
+        cout << " 1. Add   2. Delete   3. Search   4. Print   5. Exit\\n";\
+        cout << "=============================================\\n";\
+        cout << "Enter your choice: ";\
+        cin >> choice;\
+\
+        switch (choice) \{\
+        case 1:\
+            cout << "Enter value to add: ";\
+            cin >> value;\
+            list.Add(value);\
+            break;\
+        case 2:\
+            cout << "Enter value to delete: ";\
+            cin >> value;\
+            list.Delete(value);\
+            break;\
+        case 3:\
+            cout << "Enter value to search: ";\
+            cin >> value;\
+            list.Search(value);\
+            break;\
+        case 4:\
+            list.Print();\
+            break;\
+        case 5:\
+            list.ExitProgram();\
+            break;\
+        default:\
+            cout << "Invalid choice! Please select again.\\n";\
+        \}\
+    \} while (choice != 5);\
+\
+    return 0;\
+\}\
+}
